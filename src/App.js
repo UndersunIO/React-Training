@@ -32,11 +32,17 @@ class App extends Component {
       this.setState({famille});
     }
 
-    handleChange = event => {
+    handleChange = (event, id) => {
       const famille = {...this.state.famille};
       const nom = event.target.value;
-      famille.membre1.nom = nom;
+      famille[id].nom = nom;
       this.setState({famille});
+    }
+
+    cacheNom = id => {
+      const famille = { ...this.state.famille}
+      famille[id].nom = 'XXX'
+      this.setState({ famille })
     }
 
     handleShowDescription = () => {
@@ -58,6 +64,9 @@ class App extends Component {
       const liste = Object.keys(famille)
       .map(membre => (
         <Membre 
+            key={membre}
+            handleChange={event => this.handleChange(event, membre)}
+            cacheNom={() => this.cacheNom(membre)}
             nom={famille.[membre].nom}
             age={famille.[membre].age} />
 
@@ -66,7 +75,7 @@ class App extends Component {
       return (
         <div className="App">
            <h1>{titre}</h1>
-          <input value={famille.membre1.nom} onChange={this.handleChange} type='text '></input>
+          
             {liste} 
           <Membre nom="Props">
             { description }
